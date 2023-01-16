@@ -10,7 +10,10 @@ export default class Game {
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
-
+    chest!: Chest;
+    clock!: THREE.Clock;
+    sun!: THREE.DirectionalLight;
+    clouds!: Clouds;
 
 
     constructor(parentEl: HTMLElement) {
@@ -25,7 +28,7 @@ export default class Game {
 
     init() {
         this.renderer.outputEncoding = THREE.sRGBEncoding;
-        this.renderer.gammaFactor = 3;
+        (this.renderer as any).gammaFactor = 3;
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -58,7 +61,7 @@ export default class Game {
         this.addChest();
 
         const loadModNameList = []
-        bus.$on("loaded", (name) => {
+        bus.$on("loaded", (name: string) => {
             loadModNameList.push(name)
             bus.$emit("progress", ~~(loadModNameList.length / 3 * 100))
             if (loadModNameList.length >= 3) {
@@ -69,7 +72,7 @@ export default class Game {
         })
 
         this.clock = new THREE.Clock();
-        this.update()
+        this.update();
 
         window.addEventListener('resize', () => {
             this.resize()
@@ -96,7 +99,7 @@ export default class Game {
         };
         uniforms["topColor"].value.copy(hemiLight.color);
 
-        this.scene.fog.color.copy(uniforms["bottomColor"].value);
+        (this.scene.fog as any).color.copy(uniforms["bottomColor"].value);
 
         const skyGeo = new THREE.SphereBufferGeometry(1000, 32, 15);
         const skyMat = new THREE.ShaderMaterial({
@@ -151,7 +154,7 @@ export default class Game {
             target.scale.set(1.2, 1.2, 1.2);
             target.position.set(3, 0, 6.5)
             target.rotation.set(0,-.8,0)
-            target.traverse(c => {
+            target.traverse((c: any) => {
                 c.castShadow = true;
                 c.receiveShadow = true;
                 if (c.material && c.material.map) {
@@ -173,7 +176,7 @@ export default class Game {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    update(t) {
+    update(t?: any) {
         requestAnimationFrame(dt => {
             this.update();
             let delta = this.clock.getDelta()

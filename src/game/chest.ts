@@ -16,7 +16,7 @@ export default class Chest {
     animations: any;
     rabbit: any;
     mixer: any;
-    timer: any;
+    timer!: gsap.TimelineVars;
 
 
     constructor(game: Game) {
@@ -146,7 +146,7 @@ export default class Chest {
         curAction.setLoop(THREE.LoopOnce, 1);
         curAction.play();
     }
-    update(delta) {
+    update(delta: number) {
         this.mixer && this.mixer.update(delta);
         this.rabbit && this.rabbit.update(delta);
     }

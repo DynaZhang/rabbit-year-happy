@@ -34,7 +34,7 @@ export default class Rabbit {
             this.animations = gltf.animations;
             this.target.scale.set(5.5,5.5,5.5);
             this.target.position.set(1.65,0.12,-5.5)
-            this.target.traverse(c => {
+            this.target.traverse((c: any) => {
                 c.castShadow = true;
                 c.receiveShadow = true;
                 if (c.material && c.material.map) {
@@ -66,7 +66,7 @@ export default class Rabbit {
             this.chest.close();
         },4500)
     }
-    update(delta) {
+    update(delta: number) {
         this.mixer && this.mixer.update(delta);
     }
 }

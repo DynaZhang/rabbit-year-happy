@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "gsap": "^3.11.4",
     "mitt": "^3.0.0",
     "pinia": "^2.0.28",
+    "pm2": "^5.2.2",
     "reset.css": "^2.0.2",
     "sass": "^1.57.1",
     "three": "^0.148.0",

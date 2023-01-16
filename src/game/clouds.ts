@@ -1,10 +1,16 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+import Game from '.';
 import bus from './bus';
-import {rand_int} from './math';
+import {randInt} from './math';
 
 export default class Clouds {
-    constructor(game) {
+    game: Game;
+    scene: THREE.Scene;
+    camera: THREE.Camera;
+    target: any;
+
+    constructor(game: Game) {
         this.game = game;
         this.scene = game.scene;
         this.camera = game.camera;
@@ -15,13 +21,13 @@ export default class Clouds {
         let loader = new GLTFLoader();
 
         for (let i = 0; i < 20; ++i) {
-            let index = rand_int(1, 3);
-            let scale = rand_int(5, 12);
+            let index = randInt(1, 3);
+            let scale = randInt(5, 12);
             loader.load("./assets/mod/cloud/Cloud" + index + ".glb", gltf => {
                 this.target = gltf.scene;
-                this.target.position.set((Math.random() * 2.0 - 1.0) * 300,rand_int(30,80),(Math.random() * 2.0 - 1.0) * 300);
+                this.target.position.set((Math.random() * 2.0 - 1.0) * 300,randInt(30,80),(Math.random() * 2.0 - 1.0) * 300);
                 this.target.scale.set(scale,scale,scale)
-                this.target.traverse(c => {
+                this.target.traverse((c: any) => {
                     let materials = c.material;
                     if (!(c.material instanceof Array)) {
                         materials = [c.material];
@@ -38,7 +44,7 @@ export default class Clouds {
 
 
     }
-    update(delta) {
+    update(delta: number) {
 
     }
 }
