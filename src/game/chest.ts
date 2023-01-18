@@ -83,15 +83,16 @@ export default class Chest {
         );
     }
     bindEvent() {
-        window.addEventListener('touchmove', (e) => {
+        document.getElementsByTagName('body')[0].addEventListener('touchmove', (e) => {
             e.preventDefault();
         }, {passive: false});
-        window.addEventListener('touchend', (e) => {
+        document.getElementsByTagName('body')[0].addEventListener('touchend', (e) => {
             this.handleClick(e);
         });
-        window.addEventListener('mouseup', this.handleClick.bind(this));
+        document.getElementsByTagName('body')[0].addEventListener('mouseup', this.handleClick.bind(this));
     }
     handleClick(e: TouchEvent | MouseEvent) {
+        console.log('event', e);
         let vector = new THREE.Vector3();
         let x,y;
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -109,7 +110,7 @@ export default class Chest {
         vector.unproject(this.camera);
         let raycaster = new THREE.Raycaster(this.camera.position, vector.sub(this.camera.position).normalize());
         let intersects = raycaster.intersectObjects(this.scene.children, true);
-        console.log(intersects)
+        console.log('intersects', intersects)
         let isActive = false;
         for (const item of intersects) {
             this.target.traverse(c => {
