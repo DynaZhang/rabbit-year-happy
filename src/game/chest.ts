@@ -5,6 +5,7 @@ import Rabbit from './rabbit';
 import bus from "./bus"
 import gsap, { Bounce } from "gsap"
 import Game from '.';
+import throttle from 'lodash/throttle';
 
 export default class Chest {
     game: Game;
@@ -82,18 +83,31 @@ export default class Chest {
         );
     }
     bindEvent() {
-        window.addEventListener("mouseup", this.handleClick.bind(this));
-        window.addEventListener("touchend", this.handleClick.bind(this))
+        window.addEventListener('touchend', (e) => {
+            this.handleClick(e);
+            e.stopPropagation();
+        });
+        window.addEventListener('mouseup', this.handleClick.bind(this));
     }
-    handleClick(e) {
+    handleClick(e: TouchEvent | MouseEvent) {
         let vector = new THREE.Vector3();
+        let x,y;
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            x = (e as TouchEvent).changedTouches[0].pageX;
+            y = (e as TouchEvent).changedTouches[0].pageY;
+        } else {
+            x = (e as MouseEvent).clientX;
+            y = (e as MouseEvent).clientY;
+        }
         vector.set(
-            (e.clientX / window.innerWidth) * 2 - 1,
-            -(e.clientY / window.innerHeight) * 2 + 1,
+            (x / window.innerWidth) * 2 - 1,
+            -(y / window.innerHeight) * 2 + 1,
             0.5);
         vector.unproject(this.camera);
         let raycaster = new THREE.Raycaster(this.camera.position, vector.sub(this.camera.position).normalize());
-        let intersects = raycaster.intersectObjects(this.scene.children);
+        let intersects = raycaster.intersectObjects(this.scene.children, true);
+        console.log(intersects)
         let isActive = false;
         for (const item of intersects) {
             this.target.traverse(c => {
@@ -101,6 +115,7 @@ export default class Chest {
             })
         }
         if (isActive && this.state == "wait" && !this.isOpen) {
+            console.log(4444)
             this.open();
         }
     }
