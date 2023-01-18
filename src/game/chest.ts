@@ -83,9 +83,11 @@ export default class Chest {
         );
     }
     bindEvent() {
+        window.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, {passive: false});
         window.addEventListener('touchend', (e) => {
             this.handleClick(e);
-            e.stopPropagation();
         });
         window.addEventListener('mouseup', this.handleClick.bind(this));
     }
